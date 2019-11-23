@@ -105,3 +105,8 @@ venv.bak/
 out/
 *.json
 *.xml
+
+# Conversion result
+labels/
+train.txt
+val.txt
