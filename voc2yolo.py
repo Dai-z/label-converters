@@ -1,5 +1,4 @@
 import xml.etree.ElementTree as ET
-import pickle
 import os
 from os import listdir, getcwd
 from os.path import join
@@ -8,11 +7,12 @@ import argparse
 sets = [('2012', 'train'), ('2012', 'val'), ('2007', 'train'), ('2007', 'val'),
         ('2007', 'test')]
 
-classes = [
-    "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat",
-    "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person",
-    "pottedplant", "sheep", "sofa", "train", "tvmonitor"
-]
+# classes = [
+#     "aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat",
+#     "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person",
+#     "pottedplant", "sheep", "sofa", "train", "tvmonitor"
+# ]
+classes = []
 
 
 def convert(size, box):
@@ -28,6 +28,24 @@ def convert(size, box):
     h = h * dh
     return (x, y, w, h)
 
+def parse_cls(img_files, args):
+    for image in img_files:
+        if args.anno_dir:
+            anno_file = join(args.anno_dir, image.split('.')[0]) + '.xml'
+        else:
+            anno_file = join(args.img_dir, '..', 'Annotations',
+                            image.split('.')[0] + '.xml')
+        if not os.path.isfile(anno_file):
+            continue
+        in_file = open(anno_file)
+
+        tree = ET.parse(in_file)
+        root = tree.getroot()
+
+        for obj in root.iter('object'):
+            cls = obj.find('name').text
+            if cls not in classes:
+                classes.append(cls)
 
 def convert_annotation(image, args):
     if args.anno_dir:
@@ -89,9 +107,12 @@ if __name__ == "__main__":
     if args.train_set:
         set_name = 'train'
     else:
-        set_name = 'test'
-    print(set_name)
+        set_name = 'val'
     list_file = open(join(args.out_dir, set_name+'.txt'), 'w')
+
+    if len(classes) == 0:
+        parse_cls(img_files, args)
+        classes.sort()
 
     for image in img_files:
         if not args.list_only:
@@ -105,3 +126,9 @@ if __name__ == "__main__":
         # Write list file
         list_file.write(join(args.img_dir, image) + '\n')
     list_file.close()
+
+    # Write names file
+    print("classes: {}".format(classes))
+    with open(join(args.out_dir, 'yolo.names'), 'w') as name:
+        for cls in classes:
+            name.write('{}\n'.format(cls))

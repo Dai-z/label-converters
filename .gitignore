@@ -109,4 +109,6 @@ out/
 # Conversion result
 labels/
 train.txt
+test.txt
 val.txt
+yolo.names
