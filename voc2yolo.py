@@ -89,14 +89,17 @@ if __name__ == "__main__":
     parser.add_argument("--anno_dir",
                         default="",
                         help="Directory for VOC annotation xml files")
+    parser.add_argument("--name_file",
+                        default="",
+                        help="Path to yolo name file")
     parser.add_argument("--list_only",
-                        type=bool,
-                        default=False,
+                        action='store_true',
                         help="Generate for yolo list only.")
     parser.add_argument("--train_set",
                         action='store_true',
                         help="Generate for train set")
     parser.set_defaults(train_set=False)
+    parser.set_defaults(list_only=False)
     args = parser.parse_args()
 
     img_files = listdir(args.img_dir)
@@ -111,8 +114,13 @@ if __name__ == "__main__":
     list_file = open(join(args.out_dir, set_name+'.txt'), 'w')
 
     if len(classes) == 0:
-        parse_cls(img_files, args)
-        classes.sort()
+        if args.name_file:
+            name_f = open(args.name_file)
+            for line in name_f:
+                classes.append(line.strip('\n'))
+        else:
+            parse_cls(img_files, args)
+            classes.sort()
 
     for image in img_files:
         if not args.list_only:
@@ -121,10 +129,10 @@ if __name__ == "__main__":
                 continue
         # If annotation path given but not labels found
         elif args.anno_dir and not os.path.exists(
-                join(args.anno_dir, 'labels', image.split('.')[0] + '.txt')):
+                join(args.anno_dir, image.split('.')[0] + '.xml')):
             continue
         # Write list file
-        list_file.write(join(args.img_dir, image) + '\n')
+        list_file.write(join(args.out_dir, 'JPEGImages', image) + '\n')
     list_file.close()
 
     # Write names file
