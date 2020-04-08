@@ -31,7 +31,7 @@ def instance2xml_bbox(anno, bbox_type='xyxy'):
     E = objectify.ElementMaker(annotate=False)
     anno_tree = E.object(
         E.name(anno['category_id']),
-        E.bndbox(E.xmin(xmin), E.ymin(ymin), E.xmax(xmax), E.ymax(ymax)),
+        E.bndbox(E.xmin(int(xmin)), E.ymin(int(ymin)), E.xmax(int(xmax)), E.ymax(int(ymax))),
         E.difficult(anno['iscrowd']))
     return anno_tree
 
