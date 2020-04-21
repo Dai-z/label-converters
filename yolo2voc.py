@@ -16,17 +16,20 @@ parse.add_argument('--label_dir',
                    help='convert yolo labels(txt file) in label_dir')
 args = parse.parse_args()
 
+label_path = os.path.abspath(args.label_dir)
 if os.path.isfile(args.class_list):
     list_file = args.class_list
 else:
-    list_file = join(args.label_dir, args.class_list)
+    list_file = join(label_path, args.class_list)
 
 class_list = []
 with open(list_file) as f:
     for line in f:
         class_list.append(line.strip())
+if not os.path.isdir(label_path.replace('labels', 'annotations')):
+    os.mkdir(label_path.replace('labels', 'annotations'))
 
-label_files = os.listdir(args.label_dir)
+label_files = os.listdir(label_path)
 for label_file in label_files:
     if label_file == args.class_list:
         continue
