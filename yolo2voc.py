@@ -26,6 +26,7 @@ class_list = []
 with open(list_file) as f:
     for line in f:
         class_list.append(line.strip())
+print(class_list)
 if not os.path.isdir(label_path.replace('labels', 'annotations')):
     os.mkdir(label_path.replace('labels', 'annotations'))
 
@@ -54,6 +55,9 @@ for label_file in label_files:
             E.segmented(0))
         for line in f:
             [c, x, y, w, h] = line.split(' ')
+            if int(c) >= len(class_list):
+                print('error label: ' + c)
+                continue
             name = class_list[int(c)]
             x = float(x) * shape[1]
             y = float(y) * shape[0]
