@@ -51,7 +51,7 @@ for label_file in label_files:
         # xml head
         anno_tree = E.annotation(
             E.filename(image_file.split('/')[-1]),
-            E.size(E.width(shape[0]), E.height(shape[1]), E.depth(shape[2])),
+            E.size(E.width(shape[1]), E.height(shape[0]), E.depth(shape[2])),
             E.segmented(0))
         for line in f:
             [c, x, y, w, h] = line.split(' ')

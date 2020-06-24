@@ -25,4 +25,5 @@ for label in label_list:
                 num = float(contents[i])
                 if num > 1 or num < 0:
                     print('Error in : ' + os.path.join(label_dir, label))
+                    print(line)
 
