@@ -24,6 +24,7 @@ if not os.path.isdir(txt_dir):
     txt_dir = None
 
 cnt = 0
+image_list.sort()
 for img in image_list:
     print('Renaming: '+os.path.join(image_dir, img))
     prefix = img.rsplit('.')[0]
