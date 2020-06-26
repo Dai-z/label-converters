@@ -13,7 +13,7 @@ parser.add_argument('--image_dir',
 args = parser.parse_args()
 
 image_dir = os.path.abspath(args.image_dir)
-image_list = os.listdir(args.image_dir)
+tmp_list = os.listdir(args.image_dir)
 txt_dir = image_dir.replace('JPEGImages', 'labels').replace('images','labels')
 xml_dir = image_dir.replace('JPEGImages', 'annotations').replace('images','annotations')
 if not os.path.isdir(xml_dir):
@@ -23,8 +23,17 @@ if not os.path.isdir(xml_dir):
 if not os.path.isdir(txt_dir):
     txt_dir = None
 
-cnt = 0
-image_list.sort()
+cnt = -1
+tmp_list.sort()
+image_list = []
+for img in tmp_list:
+    if 'image_' in img:
+        cnt = int(img.split('.')[0].split('_')[-1])
+    else:
+        image_list.append(img)
+
+cnt += 1
+print('Index start from : {}'.format(cnt))
 for img in image_list:
     print('Renaming: '+os.path.join(image_dir, img))
     prefix = img.rsplit('.')[0]
