@@ -69,6 +69,7 @@ def convert_annotation(image, args):
         difficult = obj.find('difficult').text
         cls = obj.find('name').text
         if cls not in classes or int(difficult) == 1:
+            print('Error class: '.format(cls))
             continue
         cls_id = classes.index(cls)
         xmlbox = obj.find('bndbox')
