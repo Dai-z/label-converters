@@ -26,6 +26,7 @@ class_list = []
 with open(list_file) as f:
     for line in f:
         class_list.append(line.strip())
+print(class_list)
 if not os.path.isdir(label_path.replace('labels', 'annotations')):
     os.mkdir(label_path.replace('labels', 'annotations'))
 
@@ -50,10 +51,13 @@ for label_file in label_files:
         # xml head
         anno_tree = E.annotation(
             E.filename(image_file.split('/')[-1]),
-            E.size(E.width(shape[0]), E.height(shape[1]), E.depth(shape[2])),
+            E.size(E.width(shape[1]), E.height(shape[0]), E.depth(shape[2])),
             E.segmented(0))
         for line in f:
             [c, x, y, w, h] = line.split(' ')
+            if int(c) >= len(class_list):
+                print('error label: ' + c)
+                continue
             name = class_list[int(c)]
             x = float(x) * shape[1]
             y = float(y) * shape[0]
