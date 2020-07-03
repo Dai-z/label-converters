@@ -18,7 +18,7 @@ parser.add_argument('--image_dir',
 args = parser.parse_args()
 
 cap = cv2.VideoCapture(args.video)
-prefix=args.image_dir.strip('/').split('/')[-1] + '_'
+prefix=args.image_dir.strip('/').split('/')[-2] + '_'
 
 cnt = -1
 tmp_list=os.listdir(args.image_dir)
