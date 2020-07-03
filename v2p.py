@@ -14,6 +14,11 @@ parser.add_argument('--image_dir',
                     type=str,
                     required=True,
                     help='image saving dir')
+parser.add_argument('--wait',
+                    dest='wait_time',
+                    type=int,
+                    default=1,
+                    help='time for imshow')
 
 args = parser.parse_args()
 
@@ -74,7 +79,7 @@ while len(image) > 0:
             _, image = cap.read()
         for i in range(cnt//5000):
             _, image = cap.read()
-        ret = show_skip(image, scale,1)
+        ret = show_skip(image, scale,args.wait_time)
         if ret:
             break
 
